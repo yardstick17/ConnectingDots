@@ -18,7 +18,8 @@ DATA_SRC_DIRECTORY = os.path.expanduser('~/ConectingDots/data/zomato_photos/*')
 class_name_mapping = {}
 IMAGE_RESCALE_SIZE = DeepNet.IMAGE_RESCALE_SIZE
 CSV_LOG_FILENAME = 'model_train_log.csv'
-
+TRAIN_ON_IMAGES = 500
+NB_EPOCH = 50
 
 def get_model():
     return convnet('alexnet')
@@ -27,6 +28,7 @@ def get_model():
 def get_data():
     global DATA_SRC_DIRECTORY
     directory = glob(DATA_SRC_DIRECTORY)
+    print('directory : ', directory)
 
     data_set_input = []
     data_set_true_label = []
@@ -34,9 +36,11 @@ def get_data():
     index = 0
     for sub_directory in directory:
 
+        print('sub_directory: ', sub_directory)
         if os.path.isdir(sub_directory):
             class_dir_name = sub_directory.split('/')[-1]
-            image_class_files = glob(sub_directory + '/*.jpg')[:1000]
+
+            image_class_files = glob(sub_directory + '/*.jpg')[:TRAIN_ON_IMAGES]
 
             class_image_inputs = [preprocess_image_batch([image], color_mode='rgb',
                                                          img_size=(IMAGE_RESCALE_SIZE, IMAGE_RESCALE_SIZE),
@@ -89,7 +93,7 @@ def train_network():
     X_train, Y_train, X_test, Y_test = get_data()
     print('getting model')
     model = get_model()
-    NB_EPOCH = 100
+
 
     sgd = SGD()
     # sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
