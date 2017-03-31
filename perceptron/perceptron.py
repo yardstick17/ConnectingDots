@@ -67,7 +67,7 @@ def training_perceptron(beta, X, Y, bias=1, number_of_epoch=5000):
 
 
 if __name__ == '__main__':
-    X = [[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]]
-    Y = [0, 1, 1, 0]
+    X = [[0, 1, 0, 1, 1], [0, 1, 1, 1, 0], [1, 0, 1, 0, 1], [0, 1, 1, 0, 0]]
+    Y = [1, 1, 1, 0]
     beta = 0.1
     W = training_perceptron(beta, np.array(X), np.array(Y))
