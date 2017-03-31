@@ -21,6 +21,12 @@ def DeepNet():
     model.add(Convolution2D(32, 3, 3, activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
+    model.add(Convolution2D(32, 3, 3, activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(Convolution2D(32, 3, 3, activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+
     model.add(Convolution2D(64, 3, 3, border_mode='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -28,7 +34,7 @@ def DeepNet():
 
     model.add(Flatten())
 
-    model.add(Dense(4096, activation='relu', name='dense_1'))
+    model.add(Dense(10, activation='relu', name='dense_1'))
     model.add(Dropout(0.5))
 
     model.add(Dense(CUSTOM_OUTPUT_CATEGORIES, name='dense_3'))
