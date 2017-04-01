@@ -14,7 +14,7 @@ IMAGE_MODEL_CHECKPOINT = os.path.expanduser('~/image_clazzification_final.model.
 IMAGE_MODEL_WEIGHTS = os.path.expanduser('~/image_clazzification.model.weights.h5')
 BEST_IMAGE_MODEL = os.path.expanduser('~/image_clazzification.model.best.h5')
 
-DATA_SRC_DIRECTORY = os.path.expanduser('~/ConectingDots/datasets/*')
+DATA_SRC_DIRECTORY = os.path.expanduser('~/ConectingDots/dataset/*')
 class_name_mapping = {}
 IMAGE_RESCALE_SIZE = DeepNet.IMAGE_RESCALE_SIZE
 CSV_LOG_FILENAME = 'model_train_log.csv'
