@@ -21,6 +21,7 @@ CSV_LOG_FILENAME = 'model_train_log.csv'
 TRAIN_ON_IMAGES = 500
 NB_EPOCH = 50
 
+
 def get_model():
     return convnet('alexnet')
 
@@ -93,7 +94,6 @@ def train_network():
     X_train, Y_train, X_test, Y_test = get_data()
     print('getting model')
     model = get_model()
-
 
     sgd = SGD()
     # sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
