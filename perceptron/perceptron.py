@@ -4,6 +4,7 @@
 import math
 
 import numpy as np
+import pandas as pd
 from sklearn.utils import shuffle
 
 BIAS = 1
@@ -38,6 +39,7 @@ def training_perceptron(beta, X, Y, number_of_epoch=5000):
     :param Y: the target value against feature set
     """
 
+    print('Training SetUp : \nnumber_of_epoch: ', number_of_epoch, '\nbeta:', beta)
     W = np.random.rand(1, X.shape[1])
     tracking_param_list = []  # not used in training perceptron
     for epoch in range(number_of_epoch):
@@ -52,7 +54,7 @@ def training_perceptron(beta, X, Y, number_of_epoch=5000):
             delta_W = [delta_weight(beta, true_label, predicted_output, x) for x in feature_row]
 
             tracking_param_list.append(
-                [[feature_row], true_label, np.around(W, decimals=1), predicted_output, theta,
+                [feature_row, true_label, np.around(W, decimals=1), predicted_output, theta,
                  delta_W])  # not used in tuning params
 
             W = np.add(W, delta_W)
@@ -71,12 +73,17 @@ def print_training_details(tracking_param_list):
     import pandas as pd
     df = pd.DataFrame(tracking_param_list,
                       columns=['feature_row', 'true_label', 'weight vector', 'predicted_output', 'theta', 'delta_W'])
-    pd.set_option('display.width', 200)
+
     print(df)
 
 
 if __name__ == '__main__':
-    X = [[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]]
-    Y = [0, 1, 1, 0]
+    pd.set_option('display.width', 200)
+
+    X = np.array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
+    Y = np.array([0, 1, 1, 0])
     beta = 0.1
-    W = training_perceptron(beta, np.array(X), np.array(Y))
+
+    print('Training Data : \n', pd.DataFrame([[x, y] for x, y in zip(X, Y)], columns=['X', 'Y']))
+
+    W = training_perceptron(beta, X, Y)
