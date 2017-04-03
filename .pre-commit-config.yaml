@@ -1,0 +1,43 @@
+-   repo: git@github.com:asottile/reorder_python_imports
+    sha: v0.3.0
+    commit_stage: [commit]
+    hooks:
+    -   id: reorder-python-imports
+        stages: commit_stage
+
+-   repo: git://github.com/pre-commit/pre-commit-hooks
+    sha: v0.6.0
+    commit_stage: [commit]
+    hooks:
+    -   id: trailing-whitespace
+    -   id: check-ast
+    -   id: check-case-conflict
+    -   id: check-merge-conflict
+    -   id: check-symlinks
+    -   id: debug-statements
+    #-   id: detect-aws-credentials
+    #-   id: detect-private-key     # Has a bug where it fails when you add submodule changes
+    -   id: double-quote-string-fixer
+    -   id: end-of-file-fixer
+    -   id: fix-encoding-pragma
+    -   id: flake8
+        stages: commit_stage
+
+-   repo: local
+    push_stage: [push]
+    commit_stage: [commit]
+
+    hooks:
+    #-   id: check-tox
+        #name: Tox Tests
+        #entry: python -m tox
+        #stages: push_stage
+        #language: system
+        #files: \.py$
+    -   id: check-nose2
+        name: Nose2 Tests
+        entry: sh -c "make test"
+        #stages: commit_stage
+        stages: [push, commit]
+        language: system
+        files: \.py$
