@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.customlayers import crosschannelnormalization
-from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.customlayers import Softmax4D
-from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.customlayers import splittensor
-from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.imagenet_tool import synset_to_dfs_ids
 from keras.layers import Activation
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -19,8 +15,18 @@ from keras.optimizers import SGD
 from scipy.misc import imread
 from scipy.misc import imresize
 
+from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.customlayers import Softmax4D
+from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.customlayers import \
+    crosschannelnormalization
+from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.customlayers import splittensor
+from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.imagenet_tool import synset_to_dfs_ids
 
-def convnet(network, weights_path=None, heatmap=False, trainable=None):
+VGG_16_IMAGE_SHAPE = (224, 224)
+VGG_19_IMAGE_SHAPE = (224, 224)
+ALEXNET_IMAGE_SHAPE = (227, 227)
+
+
+def convnet(network, number_of_output_class, weights_path=None, heatmap=False, trainable=None):
     """
     Returns a keras model for a CNN.
 
@@ -35,7 +41,7 @@ def convnet(network, weights_path=None, heatmap=False, trainable=None):
     >>> im = preprocess_image_batch(['cat.jpg'])
 
     >>> # Test pretrained model
-    >>> model = convnet('vgg_16', 'weights/vgg16_weights.h5')
+    >>> model = convnet(10,'vgg_16', 'weights/vgg16_weights.h5')
     >>> sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
     >>> model.compile(optimizer=sgd, loss='categorical_crossentropy')
     >>> out = model.predict(im)
@@ -60,7 +66,9 @@ def convnet(network, weights_path=None, heatmap=False, trainable=None):
 
     output_dict:
         Dict of feature layers, asked for in output_layers.
+        :param number_of_output_class: Number of classes for classification purpose
     """
+
     def __get_heatmap_model():
         convnet_heatmap = convnet_init(heatmap=True)
         for layer in convnet_heatmap.layers:
@@ -78,12 +86,12 @@ def convnet(network, weights_path=None, heatmap=False, trainable=None):
         return convnet_heatmap
 
     # Select the network
-    convnet_init = __get_model_based_on_input_network(network)
-    convnet = convnet_init(weights_path, heatmap=False)
+    convnet_init = __get_model_based_on_input_network(network,number_of_output_class)
+    convnet = convnet_init(number_of_output_class, weights_path, heatmap=False)
     return __get_heatmap_model() if heatmap else convnet
 
 
-def __get_model_based_on_input_network(network):
+def __get_model_based_on_input_network(network, number_of_output_class):
     """
     Select correct model method based on input string
 

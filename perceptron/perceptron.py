@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
     X = np.array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
     Y = np.array([0, 1, 1, 0])
-    beta = 0.1
+    beta = 2
 
     print('Training Data : \n', pd.DataFrame([[x, y] for x, y in zip(X, Y)], columns=['X', 'Y']))
 

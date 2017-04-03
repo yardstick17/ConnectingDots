@@ -4,7 +4,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
 # C extensions
 *.so
 
@@ -92,5 +91,7 @@ ENV/
 
 .gitignore
 .idea/
-.ipynb_checkpoints/
 Untitled.ipynb
+dataset/
+model_train_log.csv
+.h5

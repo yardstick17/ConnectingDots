@@ -2,10 +2,22 @@ import numpy as np
 from scipy.misc import imread
 from scipy.misc import imresize
 
+from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.convnets import ALEXNET_IMAGE_SHAPE, \
+    VGG_16_IMAGE_SHAPE, VGG_19_IMAGE_SHAPE
 
-def preprocess_image_batch(image_paths, img_size=None, crop_size=None, color_mode='rgb', out=None):
+IMAGE_RESIZE_DIMENSION_DICT = {
+    'alexnet': ALEXNET_IMAGE_SHAPE,
+    'vgg_16': VGG_16_IMAGE_SHAPE,
+    'vgg_19': VGG_19_IMAGE_SHAPE
+
+}
+
+
+def preprocess_image_batch(image_paths, network_architecture_used, crop_size=None, color_mode='rgb',
+                           out=None):
     """
     Consistent preprocessing of images batches
+    :param network_architecture_used:
     :param image_paths: iterable: images to process
     :param crop_size: tuple: crop images if specified
     :param img_size: tuple: resize images if specified
@@ -13,7 +25,7 @@ def preprocess_image_batch(image_paths, img_size=None, crop_size=None, color_mod
     :param out: append output to this iterable if specified
     """
     img_list = []
-
+    img_size = get_image_resize_dimension(network_architecture_used)
     for im_path in image_paths:
         img = imread(im_path, mode='RGB')
         if img_size:
@@ -45,3 +57,7 @@ def preprocess_image_batch(image_paths, img_size=None, crop_size=None, color_mod
         out.append(img_batch)
     else:
         return img_batch
+
+
+def get_image_resize_dimension(network_architecture_used):
+    return IMAGE_RESIZE_DIMENSION_DICT.get(network_architecture_used)
