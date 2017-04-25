@@ -10,9 +10,8 @@ from keras.layers import MaxPooling2D
 from keras.layers import ZeroPadding2D
 from keras.models import Sequential
 
-from clazzify.convnetskeras.customlayers import cross_channel_normalization
-from clazzify.convnetskeras.customlayers import splittensor
-from clazzify.spatial_pyramid_pooling import SpatialPyramidPooling
+from neural_networks.convolutional_neural_network.networks.spp_pooling.spatial_pyramid_pooling import \
+    SpatialPyramidPooling
 
 CUSTOM_OUTPUT_CATEGORIES = 2
 

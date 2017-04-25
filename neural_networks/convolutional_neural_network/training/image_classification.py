@@ -38,8 +38,6 @@ def get_model(NETWORK_MODEL, nb_classes):
 
 
 def get_data():
-    import ipdb;
-    ipdb.set_trace()
     data_set_input_images_files, data_set_input_images_true_label = get_class_wise_images_and_true_label()
     processed_input_images = [preprocess_image_batch([image], NETWORK_MODEL)
                                for image in data_set_input_images_files]
