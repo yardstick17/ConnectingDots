@@ -1,15 +1,17 @@
+# -*- coding: utf-8 -*-
 import os
 from glob import glob
 
 import numpy as np
 from keras.optimizers import SGD
 from keras.utils import np_utils
-#from sklearn.model_selection import train_test_split
 from sklearn.cross_validation import train_test_split
+
 from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.convnets import convnet
 from neural_networks.convolutional_neural_network.networks.image_quality import Spp
 from neural_networks.convolutional_neural_network.pre_processing.image_preprocessing_for_spp import \
     preprocess_image_batch
+#from sklearn.model_selection import train_test_split
 
 PREFIX_DIR_LOCATION = os.path.expanduser('~/training_data/eyeq/')
 IMAGE_MODEL_CHECKPOINT = os.path.join(os.path.expanduser('~/ConnectingDots'),
@@ -96,8 +98,6 @@ def train_network():
 
     print('fitting model for the dataset')
 
-    import ipdb;
-    ipdb.set_trace()
     iteration = 0
     try:
         while (iteration < 200):
