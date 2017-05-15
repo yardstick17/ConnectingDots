@@ -1,0 +1,3 @@
+[submodule "neural_networks/convolutional_neural_network/networks/keras-spp"]
+	path = neural_networks/convolutional_neural_network/networks/keras-spp
+	url = git@github.com:yardstick17/keras-spp.git
