@@ -1,4 +1,6 @@
 # ConnectingDots
+
+[![Join the chat at https://gitter.im/yardstick17/ConnectingDots](https://badges.gitter.im/yardstick17/ConnectingDots.svg)](https://gitter.im/yardstick17/ConnectingDots?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Code Support for my [blog](http://amitkushwaha.co.in)
 
 [![Build Status](https://travis-ci.org/yardstick17/ConnectingDots.svg?branch=master)](https://travis-ci.org/yardstick17/ConnectingDots)
