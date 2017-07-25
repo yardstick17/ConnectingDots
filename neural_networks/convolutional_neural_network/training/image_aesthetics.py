@@ -3,12 +3,15 @@ import os
 from glob import glob
 
 import numpy as np
+from keras.models import load_model
 from keras.optimizers import SGD
 from keras.utils import np_utils
 from sklearn.cross_validation import train_test_split
 
 from neural_networks.convolutional_neural_network.convnet_keras.convnetskeras.convnets import convnet
 from neural_networks.convolutional_neural_network.networks.image_quality import Spp
+from neural_networks.convolutional_neural_network.networks.spp_pooling.spatial_pyramid_pooling import \
+    SpatialPyramidPooling
 from neural_networks.convolutional_neural_network.pre_processing.image_preprocessing_for_spp import \
     preprocess_image_batch
 #from sklearn.model_selection import train_test_split
@@ -16,7 +19,7 @@ from neural_networks.convolutional_neural_network.pre_processing.image_preproces
 PREFIX_DIR_LOCATION = os.path.expanduser('~/training_data/eyeq/')
 IMAGE_MODEL_CHECKPOINT = os.path.join(os.path.expanduser('~/ConnectingDots'),
                                       'eyeq_model.model.checkpoint.h5')
-
+IQ_MODEL = os.path.join(os.path.expanduser('~/ConnectingDots'), 'eyeq_model.h5')
 IMAGE_MODEL_WEIGHTS = os.path.join(os.path.expanduser('~/ConnectingDots'), 'eyeq_model.model.weights.h5')
 BEST_IMAGE_MODEL = os.path.expanduser('~/ConnectingDots/eyeq_model_best_accuracy.h5')
 
@@ -26,8 +29,11 @@ CLASS_NAME_MAPPING = {}
 # IMAGE_RESCALE_SIZE = DeepNet.IMAGE_RESCALE_SIZE
 CSV_LOG_FILENAME = os.path.join(os.path.expanduser('~/ConnectingDots'), 'eyeq_model_train_log.csv')
 PER_CLASS_MAX_IMAGES = 50000
-NB_EPOCH = 3
-NETWORK_MODEL = 'alexnet'
+NB_EPOCH = 1
+
+processed_input_images_dict_path = os.path.expanduser('~/processed_input_images_dict.pkl')
+image_lable_dict_path = os.path.expanduser('~/image_lable_dict.pkl')
+import pandas as pd
 
 
 def get_model(NETWORK_MODEL, nb_classes):
@@ -36,8 +42,16 @@ def get_model(NETWORK_MODEL, nb_classes):
 
 def get_data():
     data_set_input_images_files, data_set_input_images_true_label = get_class_wise_images_and_true_label()
-    processed_input_images_dict, image_lable_dict = preprocess_image_batch(data_set_input_images_files,
-                                                                           data_set_input_images_true_label)
+    if not os.path.isfile(processed_input_images_dict_path):
+        processed_input_images_dict, image_lable_dict = preprocess_image_batch(data_set_input_images_files,
+                                                                               data_set_input_images_true_label)
+        pd.to_pickle(processed_input_images_dict, processed_input_images_dict_path)
+        pd.to_pickle(image_lable_dict, image_lable_dict_path)
+
+    else:
+        processed_input_images_dict, image_lable_dict = pd.read_pickle(
+            processed_input_images_dict_path), pd.read_pickle(image_lable_dict_path)
+
     return processed_input_images_dict, image_lable_dict
 
 
@@ -65,7 +79,7 @@ def get_class_wise_images_and_true_label():
 def get_callbacks():
     callbacks = []
     import keras
-    callbacks.append(keras.callbacks.CSVLogger(CSV_LOG_FILENAME,append=True))
+    callbacks.append(keras.callbacks.CSVLogger(CSV_LOG_FILENAME, append=True))
     callbacks.append(keras.callbacks.ModelCheckpoint(
         IMAGE_MODEL_CHECKPOINT,
         monitor='val_loss',
@@ -87,14 +101,20 @@ def train_network():
     nb_classes = len(CLASS_NAME_MAPPING.keys())
     print('processing data for training')
     # X_train, Y_train, X_test, Y_test, nb_classes = get_data()
+
     processed_input_images_dict, image_lable_dict = get_data()
     print('getting model')
-    model = Spp()
+    if not os.path.isfile(IMAGE_MODEL_CHECKPOINT):
+        model = Spp()
 
-    sgd = SGD(lr=0.0001)
-    model.compile(optimizer=sgd, loss='mse', metrics=['accuracy'])
-    model.summary()
-    callbacks = get_callbacks()
+        sgd = SGD(lr=0.0001)
+        model.compile(optimizer=sgd, loss='mse', metrics=['accuracy'])
+        model.summary()
+        callbacks = get_callbacks()
+    else:
+        model = load_model(IMAGE_MODEL_CHECKPOINT, custom_objects={'SpatialPyramidPooling': SpatialPyramidPooling})
+        callbacks = get_callbacks()
+
 
     print('fitting model for the dataset')
 
@@ -116,10 +136,10 @@ def train_network():
                           shuffle='batch', callbacks=callbacks)
 
     except KeyboardInterrupt as ke:
-        model.save('eyeq_model.h5')
+        model.save(IQ_MODEL)
 
-    model.save('eyeq_model.h5')
+    model.save(IQ_MODEL)
 
 
 if __name__ == '__main__':
-        train_network()
+    train_network()
