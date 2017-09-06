@@ -8,9 +8,6 @@ from keras.layers import Dropout
 from keras.layers import MaxPooling2D
 from keras.models import Sequential
 
-from neural_networks.convolutional_neural_network.networks.spp_pooling.spatial_pyramid_pooling import \
-    SpatialPyramidPooling
-
 CUSTOM_OUTPUT_CATEGORIES = 2
 
 
