@@ -95,3 +95,5 @@ Untitled.ipynb
 dataset/
 model_train_log.csv
 .h5
+.index
+.meta
